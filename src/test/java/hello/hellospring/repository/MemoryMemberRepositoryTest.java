@@ -31,14 +31,17 @@ class MemoryMemberRepositoryTest { // 얘는 굳이 퍼블릭으로 하지 않�
 
     @Test
     public void findByName() {
+        // 리포지토리 수준에서의 테스트
         Member member1 = new Member();
         member1.setName("spring1");
+        // repository.save() 로 멤버를 저장한다.
         repository.save(member1);
 
         Member member2 = new Member();
         member2.setName("spring2");
         repository.save(member2);
 
+        // repository.findByName() 을 테스트 한다.
         Member result = repository.findByName("spring1").get();
 
         assertThat(result).isEqualTo(member1);
