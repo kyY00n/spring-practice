@@ -1,6 +1,5 @@
 package hello.hellospring;
 
-import hello.hellospring.controller.MemberController;
 import hello.hellospring.repository.MemoryMemberRepository;
 import hello.hellospring.service.MemberService;
 import org.springframework.context.annotation.Bean;
