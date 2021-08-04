@@ -1,31 +1,21 @@
 package hello.hellospring.service;
 
 import hello.hellospring.domain.Member;
-import hello.hellospring.repository.MemoryMemberRepository;
+import hello.hellospring.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class MemberServiceTest {
+@SpringBootTest
+@Transactional
+public class MemberServiceIntegrationTest {
 
-    MemoryMemberRepository memoryMemberRepository;
-    MemberService memberService;
-
-    @BeforeEach
-    void beforeEach() {
-        memoryMemberRepository = new MemoryMemberRepository();
-
-        // 리포지토리가 private 멤버변수여서 이렇게 생성할때 넣어준다!
-        memberService = new MemberService(memoryMemberRepository);
-    }
-
-    @AfterEach
-    void afterEach() {
-        memoryMemberRepository.clearStore();
-    }
+    @Autowired MemberService memberService;
+    @Autowired MemberRepository memoryMemberRepository;
 
     @Test
     void join() {
@@ -77,18 +67,19 @@ class MemberServiceTest {
         memberService.join(member);
         Member foundMember = memberService.findMemberById(member.getId()).get();
 
-        Assertions.assertThat(foundMember).isEqualTo(member); // 이건 우리가 자바 메모리 안에서 객체 자체를 가져오는 거니까 되는데,
-        // 데이터베이스에서 정보를 가져오면 그건 새로운 객체가 되기 때문에 다르게 인식이 되는 것이다!! 와우
+        Assertions.assertThat(foundMember.getName()).isEqualTo(member.getName());
     }
 
     @Test
     void findMemberByname() {
         Member member = new Member();
-        member.setName("윤가영");
+        member.setName("spring");
+        System.out.println(member.getName());
 
         memberService.join(member);
         Member foundMember = memberService.findMemberByName(member.getName()).get();
+        System.out.println(foundMember.getName());
 
-        Assertions.assertThat(foundMember).isEqualTo(member);
+        Assertions.assertThat(foundMember.getName()).isEqualTo(member.getName());
     }
 }
